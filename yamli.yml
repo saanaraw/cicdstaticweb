@@ -1,8 +1,17 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Academy Demo Template
+Parameters:
+  LatestAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
 
 Resources:
   MyS3Bucket:
     Type: AWS::S3::Bucket
   MyQueue:
     Type: AWS::SQS::Queue
+  SaanaInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref LatestAmiId
+      InstanceType: t2.micro
