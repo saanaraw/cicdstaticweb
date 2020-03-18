@@ -15,6 +15,9 @@ Resources:
     Properties:
       ImageId: !Ref LatestAmiId
       InstanceType: t2.micro
+      SecurityGroups:
+        - !Ref SaanaInstanceSecurityGroup
+
   SaanaLoadBalancer:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
     Properties:
@@ -24,6 +27,10 @@ Resources:
         - LoadBalancerPort: '80'
           InstancePort: '80'
           Protocol: HTTP
+  SaanaInstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+       GroupDescription: 'Security group for EC2 instance'
 Outputs:
   LoadBalancer:
      Description: A reference to the Application Load Balancer
