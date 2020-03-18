@@ -24,3 +24,7 @@ Resources:
         - LoadBalancerPort: '80'
           InstancePort: '80'
           Protocol: HTTP
+Outputs:
+  LoadBalancer:
+     Description: A reference to the Application Load Balancer
+     Value: !Ref SaanaLoadBalancer
