@@ -4,6 +4,18 @@ Parameters:
   LatestAmiId:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+  IrelandDefaultVPC:
+    Type: String
+    Default: vpc-32cc224b
+  IrelandDefaultSubnetA:
+    Type: String
+    Default: subnet-1e035878
+  IrelandDefaultSubnetB:
+    Type: String
+    Default: subnet-018ba049
+  IrelandDefaultSubnetC:
+    Type: String
+    Default: subnet-b984e1e3
 
 Resources:
   MyS3Bucket:
@@ -17,29 +29,47 @@ Resources:
       InstanceType: t2.micro
       SecurityGroups:
         - !Ref SaanaInstanceSecurityGroup
-
   SaanaLoadBalancer:
-    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      AvailabilityZones:
-        - "eu-west-1a"
-      Listeners:
-        - LoadBalancerPort: '80'
-          InstancePort: '80'
-          Protocol: HTTP
+      Type: application
+      Scheme: internet-facing
+      Subnets:
+        - !Ref IrelandDefaultSubnetA
+        - !Ref IrelandDefaultSubnetB
+        - !Ref IrelandDefaultSubnetC
+      SecurityGroups:
+        - !Ref SaanaLoadBalancerSecurityGroup
+  LoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref SaanaLoadBalancer
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref DefaultTargetGroup
+  DefaultTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      VpcId: !Ref IrelandDefaultVPC
+      Port: 80
+      Protocol: HTTP
   SaanaInstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
        GroupDescription: 'Security group for EC2 instance'
-  LoadBalancerSecurityGroup:
+       SecurityGroupIngress:
+         - IpProtocol: tcp
+           FromPort: '80'
+           ToPort: '80'
+           SourceSecurityGroupId: !Ref SaanaLoadBalancerSecurityGroup
+  SaanaLoadBalancerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: ELB scgroup
+      VpcId: vpc-32cc224b
       SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: '22'
-          ToPort: '22'
-          CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
           FromPort: '80'
           ToPort: '80'
