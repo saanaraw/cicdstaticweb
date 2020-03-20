@@ -43,7 +43,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1584519367440</updated>
-      <workItem from="1584519375498" duration="28220000" />
+      <workItem from="1584519375498" duration="34682000" />
     </task>
     <servers />
   </component>
@@ -55,5 +55,17 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="0" y="0" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1584606225709" />
+    <state x="758" y="158" key="FileChooserDialogImpl" timestamp="1584710346528">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="758" y="158" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1584710346528" />
+    <state x="418" y="141" key="new project wizard" timestamp="1584687928060">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="418" y="141" key="new project wizard/0.0.1536.824@0.0.1536.824" timestamp="1584687928060" />
+    <state x="686" y="145" key="search.everywhere.popup" timestamp="1584629766951">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="686" y="145" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1584629766951" />
   </component>
 </project>

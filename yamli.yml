@@ -22,13 +22,7 @@ Resources:
     Type: AWS::S3::Bucket
   MyQueue:
     Type: AWS::SQS::Queue
-  SaanaInstance:
-    Type: AWS::EC2::Instance
-    Properties:
-      ImageId: !Ref LatestAmiId
-      InstanceType: t2.micro
-      SecurityGroups:
-        - !Ref SaanaInstanceSecurityGroup
+
   SaanaLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
@@ -55,6 +49,33 @@ Resources:
       VpcId: !Ref IrelandDefaultVPC
       Port: 80
       Protocol: HTTP
+  SaanaAutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AvailabilityZones:
+        - "eu-west-1a"
+        - "eu-west-1b"
+        - "eu-west-1c"
+      LaunchConfigurationName: !Ref SaanaLaunchConfig
+      MinSize: "1"
+      MaxSize: "2"
+      TargetGroupARNs:
+        - Ref: DefaultTargetGroup
+  SaanaLaunchConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      ImageId: !Ref LatestAmiId
+      UserData:
+        Fn::Base64:
+          Fn::Join:
+            - "\n"
+            - - "#!/bin/bash"
+              - "amazon-linux-extras install epel"
+              - "amazon-linux-extras install nginx1"
+              - "systemctl start nginx"
+      SecurityGroups:
+        - Ref: SaanaInstanceSecurityGroup
+      InstanceType: t2.micro
   SaanaInstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
